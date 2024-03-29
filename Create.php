@@ -25,7 +25,6 @@
             </div>
             <input type="submit" value="Create Playlist">
         </form>
-
         <?php
         echo "<h1 style='color: white; margin: 10px'>Create Song: </h1>";
         ?>
@@ -70,25 +69,29 @@
     let numberMember = 1;
     let songIDs = 0;
     let songNames = 0;
+    let songIDsTwo = 0;
+    let songNamesTwo = 0;
     function updateElements(){
         let element = document.getElementById('hereSong');
         let elements = element.querySelectorAll('select');
         let lastElement = elements[elements.length - 1];
         lastElement.addEventListener('change',makeThing);
 
-        element = document.getElementById('hereBand');
-        elements = element.querySelectorAll('input');
-        let lastElementTwo = elements[elements.length - 1];
-        lastElementTwo.addEventListener('keydown',makeThingTwo);
         function makeThing(){
             addSong(songIDs,songNames);
             lastElement.removeEventListener('change',makeThing);
             updateElements();
         }
+    }
+    function updateElementsTwo(){
+        let elementTwo = document.getElementById('hereBand');
+        let elementsTwo = elementTwo.querySelectorAll('input');
+        let lastElementTwo = elementsTwo[elementsTwo.length - 1];
+        lastElementTwo.addEventListener('keydown',makeThingTwo);
         function makeThingTwo(){
             addMember();
             lastElementTwo.removeEventListener('keydown',makeThingTwo);
-            updateElements();
+            updateElementsTwo();
         }
     }
     function addMember(){
@@ -117,8 +120,8 @@
         songIDs = listOfID;
         songNames = listOfNames;
         let elementBefore = document.getElementById('hereSong');
-        let selectArray = elementBefore.querySelectorAll('select');
-        let lastSelect = selectArray[selectArray.length - 1];
+        let selectArrayTwo = elementBefore.querySelectorAll('select');
+        let lastSelect = selectArrayTwo[selectArrayTwo.length - 1];
         let label = document.createElement("label");
         label.setAttribute("for", "song" + (numberSong + 1).toString());
 
@@ -149,8 +152,8 @@
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
     function addBand(listOfID, listOfNames){
-        songIDs = listOfID;
-        songNames = listOfNames;
+        songIDsTwo = listOfID;
+        songNamesTwo = listOfNames;
         let elementBefore = document.getElementById('hereSongInput');
         let label = document.createElement("label");
         label.setAttribute("for", "bandw");
@@ -183,6 +186,7 @@
     echo "addSong($ids,$names);";
     echo "addMember();";
     echo "updateElements();";
+    echo "updateElementsTwo();";
     $i = 0; $names = []; $ids = [];
     foreach ($db->band->find() as $band){
         $names[$i] = $band['name'];
