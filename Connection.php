@@ -2,6 +2,7 @@
 require 'vendor/autoload.php'; // include Composer's autoloader
 $client = new MongoDB\Client("mongodb://localhost:27017");
 $db = $client->music;
+
 # REGISTER / LOGIN ---------------------------
 function validateUserInput($username, $password): bool
 {
@@ -28,6 +29,41 @@ if(isset($_POST['type'])){
     header("Location: /Account.php");
     exit();
 }
+if(isset($_POST['create'])){
+    session_start();
+    switch ($_POST['create']){
+        case "band":
+            $members = [];
+            for ($i = 1; $i < sizeof($_POST); $i++){
+                if(isset($_POST['treeMember' . $i])){
+                    $members[$i] = $_POST['treeMember' . $i];
+                }
+            }
+            addBand($_POST['name'],$members);
+            header("Location: /Create.php");
+            break;
+        case "song":
+            $band_id = getband($_POST['band'],false)['_id'];
+            if($band_id != null){
+                addSong($_POST['name'],$band_id,$_POST['genre'],$_POST['length'],$_SESSION['user']['_id']);
+            }
+            header("Location: /Create.php");
+            break;
+        case "playlist":
+            $songs = [];
+            for ($i = 1; $i < sizeof($_POST); $i++){
+                if(isset($_POST['song' . $i])){
+                    $song = getSong($_POST['song' . $i],false)['_id'];
+                    if($song != null){
+                        $songs[$i] = $song;
+                    }
+                }
+            }
+            addPlaylist($_POST['name'],$songs,$_SESSION['user']['_id']);
+            header("Location: /Create.php");
+            break;
+    }
+}
 
 # SHOW ---------------------------
 function showPlaylist($playlist): void
@@ -35,7 +71,9 @@ function showPlaylist($playlist): void
     echo "<div id='playlist'>";
     echo "<h1>" . $playlist['name'] . "</h1>";
     foreach($playlist['songs'] as $song){
-        showSongMinimal(getSong($song,true));
+        if(getSong($song,true) != null) {
+            showSongMinimal(getSong($song, true));
+        }
     }
     echo "<p>" . "This Playlist is made by: " . getUser($playlist['user'],true)['username'] . "</p>";
     echo "<p>" . "ID: " . $playlist['user'] . "</p>";
@@ -43,12 +81,14 @@ function showPlaylist($playlist): void
 }
 function showSongMinimal($song): void
 {
+    echo "<a href=". "Song.php?id=" . $song['_id'] . ">";
     echo "<div id='songMinimal'>";
     echo "<h1>" . $song['name'] . "</h1>";
     echo "<p>" . getBand($song['band'],true)['name'] . "</p>";
     echo "<p>" . $song['genre'] . "</p>";
     echo "<p>" . $song['length'] . "s" . "</p>";
     echo "</div>";
+    echo "</a>";
 }
 function showSong($song): void
 {
@@ -146,7 +186,7 @@ function addPlaylist($name,$songs,$user): void
 function addBand($name, $members): void
 {
     global $db;
-    $db->band->insertOne(["name" => $name, "members" => $members]);
+    $db->band->insertOne(["name" => $name, "members" => (array)$members]);
 }
 
 /*function deleteSong($data, $isId = false) {
@@ -160,7 +200,7 @@ function addBand($name, $members): void
         $db->song->deleteOne(["name" => $data]);
         var_dump("hallo");
     }
-}
+}*/
 
 function deleteUser($data, $isId = false){
      global $db;
@@ -195,7 +235,7 @@ function deleteBand($data, $isId = false){
      else{
          $db->band->deleteOne(["name" => $data]);
      }
- }*/
+ }
 
 function updateSong($id, $updateData) {
     global $db;

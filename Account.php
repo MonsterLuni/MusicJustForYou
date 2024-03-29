@@ -24,7 +24,7 @@ if(isset($_SESSION['user'])){
     echo "<h3 style='color: white; margin: 10px'>Your Songs: </h3>";
     foreach($db->song->find() as $song){
         if($song['user'] == $_SESSION['user']['_id']){
-            showPlaylist($song);
+            showSong($song);
         }
     }
 }
