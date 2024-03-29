@@ -24,7 +24,7 @@ if(isset($_POST['create'])){
         case "band":
             $members = [];
             for ($i = 1; $i < sizeof($_POST); $i++){
-                if(isset($_POST['treeMember' . $i])){
+                if(isset($_POST['treeMember' . $i]) && $_POST['treeMember' . $i] != ""){
                     $members[$i] = $_POST['treeMember' . $i];
                 }
             }
@@ -32,7 +32,7 @@ if(isset($_POST['create'])){
             header("Location: /Create.php");
             break;
         case "song":
-            $band_id = getband($_POST['band'],false)['_id'];
+            $band_id = getband($_POST['bandw'],true)['_id'];
             if($band_id != null){
                 addSong($_POST['name'],$band_id,$_POST['genre'],$_POST['length'],$_SESSION['user']['_id']);
             }
@@ -41,8 +41,9 @@ if(isset($_POST['create'])){
         case "playlist":
             $songs = [];
             for ($i = 1; $i < sizeof($_POST); $i++){
-                if(isset($_POST['song' . $i])){
-                    $song = getSong($_POST['song' . $i],false)['_id'];
+                if(isset($_POST['song' . $i]) && $_POST['song' . $i] != ""){
+                    $text = $_POST["song" . $i];
+                    $song = getSong($text,true)['_id'];
                     if($song != null){
                         $songs[$i] = $song;
                     }

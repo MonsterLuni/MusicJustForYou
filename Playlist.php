@@ -9,9 +9,11 @@
 <?php require 'Header.php'; ?>
 <body id='playlistDiv'>
 <?php
+echo "<div id='songDiv'>";
 foreach($db->playlist->find() as $playlist){
     showPlaylist($playlist);
 }
+echo "</div>";
 ?>
 </body>
 </html>

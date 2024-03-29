@@ -19,12 +19,11 @@
             <input hidden="hidden" value="playlist" name="create">
             <label for="name">Name</label>
             <input type="text" name="name" placeholder="Die Beste Playlist" required>
-            <label for="song1">Songs</label>
-            <input type="text" name="song1" id="song1" placeholder="song1">
+            <label>Songs</label>
             <div id="hereSong">
-                <input type="submit" value="Create Playlist">
-                <button type="button" onclick="addSong()">Add Song</button>
+
             </div>
+            <input type="submit" value="Create Playlist">
         </form>
 
         <?php
@@ -34,12 +33,14 @@
             <input hidden="hidden" value="song" name="create">
             <label for="name">Name</label>
             <input type="text" name="name" placeholder="Best Song" required>
-            <label for="band">Band</label>
-            <input type="text" name="band" placeholder="Die Beetles" required>
             <label for="genre">Genre</label>
             <input type="text" name="genre" placeholder="Pop" required>
-            <label for="length">Name</label>
+            <label for="length">Length</label>
             <input type="text" name="length" placeholder="376" required>
+            <label>Band</label>
+            <div id="hereSongInput">
+
+            </div>
             <input type="submit" value="Create Song">
         </form>
         <?php
@@ -49,12 +50,11 @@
             <input hidden="hidden" value="band" name="create">
             <label for="name">Name</label>
             <input type="text" name="name" placeholder="The Wild Band" required>
-            <label for="treeMember1">Members</label>
-            <input type="text" name="treeMember1" id="treeMember1" placeholder="member1">
+            <label>Members</label>
             <div id="hereBand">
-                <input type="submit" value="Create Band">
-                <button type="button" onclick="addMember()">Add Member</button>
+
             </div>
+            <input type="submit" value="Create Band">
         </form>
         <?php
     }
@@ -66,38 +66,133 @@
     ?>
 </body>
 <script>
-    let number = 1;
+    let numberSong = 0;
+    let numberMember = 1;
+    let songIDs = 0;
+    let songNames = 0;
+    function updateElements(){
+        let element = document.getElementById('hereSong');
+        let elements = element.querySelectorAll('select');
+        let lastElement = elements[elements.length - 1];
+        lastElement.addEventListener('change',makeThing);
+
+        element = document.getElementById('hereBand');
+        elements = element.querySelectorAll('input');
+        let lastElementTwo = elements[elements.length - 1];
+        lastElementTwo.addEventListener('keydown',makeThingTwo);
+        function makeThing(){
+            addSong(songIDs,songNames);
+            lastElement.removeEventListener('change',makeThing);
+            updateElements();
+        }
+        function makeThingTwo(){
+            addMember();
+            lastElementTwo.removeEventListener('keydown',makeThingTwo);
+            updateElements();
+        }
+    }
     function addMember(){
         let elementBefore = document.getElementById('hereBand');
-        console.log(elementBefore)
+        let selectArray = elementBefore.querySelectorAll('input');
+        let lastSelect = selectArray[selectArray.length - 1]
         let label = document.createElement("label");
-        label.setAttribute("for", "treeMember" + (number + 1).toString());
+        label.setAttribute("for", "treeMember" + (numberMember + 1).toString());
 
         let input = document.createElement("input");
         input.setAttribute("type", "text");
-        input.setAttribute("name", "treeMember" + (number + 1).toString());
-        input.setAttribute("id", "treeMember" + (number + 1).toString());
-        input.setAttribute("placeholder", "member" + (number + 1).toString());
+        input.setAttribute("name", "treeMember" + (numberMember + 1).toString());
+        input.setAttribute("id", "treeMember" + (numberMember + 1).toString());
 
-        elementBefore.insertBefore(label,elementBefore.firstChild);
-        elementBefore.insertBefore(input,elementBefore.firstChild);
-        number++;
+        if(lastSelect === undefined){
+            elementBefore.insertBefore(label,elementBefore.firstChild);
+            elementBefore.insertBefore(input,elementBefore.firstChild);
+        }
+        else{
+            insertAfter(label,lastSelect);
+            insertAfter(input,lastSelect);
+        }
+        numberMember++;
     }
-    function addSong(){
+    function addSong(listOfID, listOfNames){
+        songIDs = listOfID;
+        songNames = listOfNames;
         let elementBefore = document.getElementById('hereSong');
-        console.log(elementBefore)
+        let selectArray = elementBefore.querySelectorAll('select');
+        let lastSelect = selectArray[selectArray.length - 1];
         let label = document.createElement("label");
-        label.setAttribute("for", "song" + (number + 1).toString());
+        label.setAttribute("for", "song" + (numberSong + 1).toString());
 
-        let input = document.createElement("input");
-        input.setAttribute("type", "text");
-        input.setAttribute("name", "song" + (number + 1).toString());
-        input.setAttribute("id", "song" + (number + 1).toString());
-        input.setAttribute("placeholder", "song" + (number + 1).toString());
+        let input = document.createElement("select");
+        input.setAttribute("name", "song" + (numberSong + 1).toString());
+        input.setAttribute("id", "song" + (numberSong + 1).toString());
+        input.setAttribute("class", "songArray");
+        input.value = '0';
+        let option = document.createElement("option");
+        input.appendChild(option);
+        for (let i = 0; i < listOfID.length; i++){
+            option = document.createElement("option");
+            option.setAttribute("value",listOfID[i]['$oid']);
+            option.textContent = listOfNames[i];
+            input.appendChild(option);
+        }
+        if(lastSelect === undefined){
+            elementBefore.insertBefore(label,elementBefore.firstChild);
+            elementBefore.insertBefore(input,elementBefore.firstChild);
+        }
+        else{
+            insertAfter(label,lastSelect);
+            insertAfter(input,lastSelect);
+        }
+        numberSong++;
+    }
+    function insertAfter(newNode, referenceNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+    function addBand(listOfID, listOfNames){
+        songIDs = listOfID;
+        songNames = listOfNames;
+        let elementBefore = document.getElementById('hereSongInput');
+        let label = document.createElement("label");
+        label.setAttribute("for", "bandw");
 
+        let input = document.createElement("select");
+        input.setAttribute("name", "bandw");
+        input.setAttribute("id", "bandw");
+        input.value = '0';
+        let option = document.createElement("option");
+        input.appendChild(option);
+        for (let i = 0; i < listOfID.length; i++){
+            option = document.createElement("option");
+            option.setAttribute("value",listOfID[i]['$oid']);
+            option.textContent = listOfNames[i];
+            input.appendChild(option);
+        }
         elementBefore.insertBefore(label,elementBefore.firstChild);
         elementBefore.insertBefore(input,elementBefore.firstChild);
-        number++;
     }
+
+    <?php
+    $names = []; $ids = []; $i = 0;
+    foreach ($db->song->find() as $song){
+        $names[$i] = $song['name'];
+        $ids[$i] = $song['_id'];
+        $i++;
+    }
+    $ids = json_encode($ids);
+    $names = json_encode($names);
+    echo "addSong($ids,$names);";
+    echo "addMember();";
+    echo "updateElements();";
+    $i = 0; $names = []; $ids = [];
+    foreach ($db->band->find() as $band){
+        $names[$i] = $band['name'];
+        $ids[$i] = $band['_id'];
+        $i++;
+    }
+    $ids = json_encode($ids);
+    $names = json_encode($names);
+    echo "addBand($ids,$names);";
+    ?>
 </script>
+
 </html>

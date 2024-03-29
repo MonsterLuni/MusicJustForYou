@@ -16,17 +16,21 @@ if(isset($_SESSION['user'])){
     echo "<h1 style='color: white; margin: 10px'>" . $_SESSION['user']['username'] . "</h1>";
     echo "<h2 style='color: white; margin: 10px'>" . $_SESSION['user']['email'] . "</h2>";
     echo "<h3 style='color: white; margin: 10px'>Your Playlists: </h3>";
+    echo "<div id='songDiv'>";
     foreach($db->playlist->find() as $playlist){
         if($playlist['user'] == $_SESSION['user']['_id']){
             showPlaylist($playlist);
         }
     }
+    echo "</div>";
     echo "<h3 style='color: white; margin: 10px'>Your Songs: </h3>";
+    echo "<div id='songDiv'>";
     foreach($db->song->find() as $song){
         if($song['user'] == $_SESSION['user']['_id']){
             showSong($song);
         }
     }
+    echo "</div>";
 }
 else {
     header("Location: /Register.php");

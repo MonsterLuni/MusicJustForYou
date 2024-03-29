@@ -37,7 +37,8 @@ body {
 }
 #songDiv{
     display: flex;
-    overflow: auto;
+    flex-wrap: wrap;
+    max-width: 1500px;
 }
 #band {
     padding: 10px;
