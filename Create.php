@@ -9,6 +9,7 @@
 <?php require 'Header.php'; ?>
 <body id='home'>
     <?php
+    session_start();
     // Dokumente anzeigen
     if(isset($_SESSION['user'])){
         foreach($db->song->find() as $song){
