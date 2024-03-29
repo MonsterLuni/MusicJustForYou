@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MJFU - Home</title>
+    <title>MJFU - Delete</title>
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/nav.css">
 </head>
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div id=songDiv>
     <?php
     foreach($db->song->find() as $song){
-        showSong($song);
+        showSongMinimal($song);
         
         ?> 
         <form method="post">

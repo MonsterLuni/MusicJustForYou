@@ -1,11 +1,13 @@
 #nav {
-    width: 100vw;
+    width: 95vw;
     height: 100px;
     background-color: #011e36;
     color: ghostwhite;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 a{
     text-decoration: none;

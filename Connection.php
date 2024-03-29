@@ -71,7 +71,9 @@ function showPlaylist($playlist): void
     echo "<div id='playlist'>";
     echo "<h1>" . $playlist['name'] . "</h1>";
     foreach($playlist['songs'] as $song){
-        showSongMinimal(getSong($song,true));
+        if(getSong($song,true) != null) {
+            showSongMinimal(getSong($song, true));
+        }
     }
     echo "<p>" . "This Playlist is made by: " . getUser($playlist['user'],true)['username'] . "</p>";
     echo "<p>" . "ID: " . $playlist['user'] . "</p>";
@@ -186,55 +188,6 @@ function addBand($name, $members): void
     global $db;
     $db->band->insertOne(["name" => $name, "members" => (array)$members]);
 }
-
-/*function deleteSong($data, $isId = false) {
-    global $db;
-
-    if ($isId) {
-        $id = new MongoDB\BSON\ObjectId($data); 
-        $db->song->deleteOne(["_id" => $id]);
-        echo "hallo1";
-    } else {
-        $db->song->deleteOne(["name" => $data]);
-        var_dump("hallo");
-    }
-}*/
-
-function deleteUser($data, $isId = false){
-     global $db;
-
-
-     if($isId){
-         $id = new MongoDB\BSON\ObjectId($data); 
-         $db->user->deleteOne(["_id" => $id]);;
-     }
-      else{
-         $db->user->deleteOne(["name" => $data]);
-     }
-}
-
-function deletePlaylist($data, $isId = false){
-     global $db;
-     if($isId){
-         $id = new MongoDB\BSON\ObjectId($data); 
-         $db->playlist->deleteOne(["_id" => $id]);;
-     }
-     else{
-         $db->playlist->deleteOne(["name" => $data]);
-     }
-}
-
-function deleteBand($data, $isId = false){
-     global $db;
-     if($isId){
-         $id = new MongoDB\BSON\ObjectId($data); 
-         $db->band->deleteOne(["_id" => $id]);;
-     }
-     else{
-         $db->band->deleteOne(["name" => $data]);
-     }
- }
-
 function updateSong($id, $updateData) {
     global $db;
 
