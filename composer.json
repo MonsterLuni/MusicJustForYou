@@ -1,0 +1,17 @@
+{
+    "name": "monst/php",
+    "autoload": {
+        "psr-4": {
+            "Monst\\Php\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "MonsterLuni",
+            "email": "monsterluni.specific@gmail.com"
+        }
+    ],
+    "require": {
+        "mongodb/mongodb": "^1.12"
+    }
+}

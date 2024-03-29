@@ -1,0 +1,13 @@
+#nav {
+    width: 100vw;
+    height: 100px;
+    background-color: #011e36;
+    color: ghostwhite;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+a{
+    text-decoration: none;
+    color: ghostwhite;
+}
