@@ -4,17 +4,6 @@ $client = new MongoDB\Client("mongodb://localhost:27017");
 $db = $client->music;
 
 # REGISTER / LOGIN ---------------------------
-function validateUserInput($username, $password): bool
-{
-    $user = getUser($username,false);
-    if($user != null){
-        if(password_verify($password, $user['password'])){
-            return true;
-        }
-    }
-    return false;
-}
-
 if(isset($_POST['type'])){
     session_start();
     if($_POST['type'] == "Register"){
@@ -64,6 +53,33 @@ if(isset($_POST['create'])){
             break;
     }
 }
+if(isset($_POST['delete'])){
+    switch ($_POST['delete']){
+        case "band":
+            deleteBand($_POST["band"], true);
+            header("Location: /Delete.php");
+            break;
+        case "song":
+            deleteSong($_POST["song"], true);
+            header("Location: /Delete.php");
+            break;
+        case "playlist":
+            deletePlaylist($_POST["playlist"], true);
+            header("Location: /Delete.php");
+            break;
+    }
+    //deleteUser($_POST["user_id"], true);
+}
+function validateUserInput($username, $password): bool
+{
+    $user = getUser($username,false);
+    if($user != null){
+        if(password_verify($password, $user['password'])){
+            return true;
+        }
+    }
+    return false;
+}
 
 # SHOW ---------------------------
 function showPlaylist($playlist): void
@@ -71,9 +87,7 @@ function showPlaylist($playlist): void
     echo "<div id='playlist'>";
     echo "<h1>" . $playlist['name'] . "</h1>";
     foreach($playlist['songs'] as $song){
-        if(getSong($song,true) != null) {
-            showSongMinimal(getSong($song, true));
-        }
+        showSongMinimal(getSong($song, true));
     }
     echo "<p>" . "This Playlist is made by: " . getUser($playlist['user'],true)['username'] . "</p>";
     echo "<p>" . "ID: " . $playlist['user'] . "</p>";
@@ -128,7 +142,8 @@ function showUser($user): void
     echo "<p>" . $user['email'] .  "</p>";
     echo "<p>" . $user['password'] .  "</p>";
 }
-# GET -------------------------
+
+# GET ---------------------------
 function getSong($data, $id): object|array|null
 {
     global $db;
@@ -166,6 +181,7 @@ function getBand($data, $id): object|array|null
         return $db->band->findOne(["name" => $data]);
     }
 }
+
 # POST ---------------------------
 function addSong($name,$band,$genre,$length,$user): void
 {
@@ -189,7 +205,47 @@ function addBand($name, $members): void
     $db->band->insertOne(["name" => $name, "members" => (array)$members]);
 }
 
+# DELETE ---------------------------
+function deleteSong($data, $isId = false): void{
+    global $db;
 
+    if ($isId) {
+        $id = new MongoDB\BSON\ObjectId($data);
+        $db->song->deleteOne(["_id" => $id]);
+    } else {
+        $db->song->deleteOne(["name" => $data]);
+    }
+}
+function deleteUser($data, $isId = false): void{
+    global $db;
+
+    if ($isId) {
+        $id = new MongoDB\BSON\ObjectId($data);
+        $db->user->deleteOne(["_id" => $id]);
+    } else {
+        $db->user->deleteOne(["name" => $data]);
+    }
+}
+function deletePlaylist($data, $isId = false): void{
+    global $db;
+    if ($isId) {
+        $id = new MongoDB\BSON\ObjectId($data);
+        $db->playlist->deleteOne(["_id" => $id]);
+    } else {
+        $db->playlist->deleteOne(["name" => $data]);
+    }
+}
+function deleteBand($data, $isId = false): void{
+    global $db;
+    if ($isId) {
+        $id = new MongoDB\BSON\ObjectId($data);
+        $db->band->deleteOne(["_id" => $id]);
+    } else {
+        $db->band->deleteOne(["name" => $data]);
+    }
+}
+
+# UPDATE ---------------------------
 function updateSong($id, $updateData) {
     global $db;
 
@@ -204,7 +260,6 @@ function updateSong($id, $updateData) {
         echo "Es wurde kein Song aktualisiert.";
     }
 }
-
 function updateUser($id, $updateData) {
     global $db;
 
@@ -219,7 +274,6 @@ function updateUser($id, $updateData) {
         echo "Es wurde kein User aktualisiert.";
     }
 }
-
 function updatePlaylist($id, $updateData) {
     global $db;
 
@@ -234,7 +288,6 @@ function updatePlaylist($id, $updateData) {
         echo "Es wurde keine Playlist aktualisiert.";
     }
 }
-
 function updateBand($id, $updateData) {
     global $db;
 
@@ -249,5 +302,4 @@ function updateBand($id, $updateData) {
         echo "Es wurde keine Band aktualisiert.";
     }
 }
-
 ?>

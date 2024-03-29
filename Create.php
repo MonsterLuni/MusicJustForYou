@@ -23,7 +23,7 @@
             <input type="text" name="song1" id="song1" placeholder="song1">
             <div id="hereSong">
                 <input type="submit" value="Create Playlist">
-                <button onclick="addSong()">Add Song</button>
+                <button type="button" onclick="addSong()">Add Song</button>
             </div>
         </form>
 
@@ -53,7 +53,7 @@
             <input type="text" name="treeMember1" id="treeMember1" placeholder="member1">
             <div id="hereBand">
                 <input type="submit" value="Create Band">
-                <button onclick="addMember()">Add Member</button>
+                <button type="button" onclick="addMember()">Add Member</button>
             </div>
         </form>
         <?php
