@@ -131,4 +131,111 @@ function addBand($name, $members){
     global $db;
     $db->band->insertOne(["name" => $name, "members" => $members]);
 }
+
+function deleteSong($data, $isId = false) {
+    global $db;
+
+    if ($isId) {
+        $id = new MongoDB\BSON\ObjectId($data); 
+        $db->song->deleteOne(["_id" => $id]);
+        echo "hallo";
+    } else {
+        $db->song->deleteOne(["name" => $data]);
+    }
+}
+
+function deleteUser($data, $isId = false){
+     global $db;
+
+     if($isId){
+         $id = new MongoDB\BSON\ObjectId($data); 
+         $db->user->deleteOne(["_id" => $id]);;
+     }
+      else{
+         $db->user->deleteOne(["name" => $data]);
+     }
+}
+
+function deletePlaylist($data, $isId = false){
+     global $db;
+     if($isId){
+         $id = new MongoDB\BSON\ObjectId($data); 
+         $db->playlist->deleteOne(["_id" => $id]);;
+     }
+     else{
+         $db->playlist->deleteOne(["name" => $data]);
+     }
+}
+
+function deleteBand($data, $isId = false){
+     global $db;
+     if($isId){
+         $id = new MongoDB\BSON\ObjectId($data); 
+         $db->band->deleteOne(["_id" => $id]);;
+     }
+     else{
+         $db->band->deleteOne(["name" => $data]);
+     }
+ }
+
+function updateSong($id, $updateData) {
+    global $db;
+
+    $filter = ["_id" => new MongoDB\BSON\ObjectId($id)];
+    $update = ['$set' => $updateData];
+
+    $result = $db->song->updateOne($filter, $update);
+
+    if ($result->getModifiedCount() > 0) {
+        echo "Song erfolgreich aktualisiert.";
+    } else {
+        echo "Es wurde kein Song aktualisiert.";
+    }
+}
+
+function updateUser($id, $updateData) {
+    global $db;
+
+    $filter = ["_id" => new MongoDB\BSON\ObjectId($id)];
+    $update = ['$set' => $updateData];
+
+    $result = $db->user->updateOne($filter, $update);
+
+    if ($result->getModifiedCount() > 0) {
+        echo "User erfolgreich aktualisiert.";
+    } else {
+        echo "Es wurde kein User aktualisiert.";
+    }
+}
+
+function updatePlaylist($id, $updateData) {
+    global $db;
+
+    $filter = ["_id" => new MongoDB\BSON\ObjectId($id)];
+    $update = ['$set' => $updateData];
+
+    $result = $db->playlist->updateOne($filter, $update);
+
+    if ($result->getModifiedCount() > 0) {
+        echo "Playlist erfolgreich aktualisiert.";
+    } else {
+        echo "Es wurde keine Playlist aktualisiert.";
+    }
+}
+
+function updateBand($id, $updateData) {
+    global $db;
+
+    $filter = ["_id" => new MongoDB\BSON\ObjectId($id)];
+    $update = ['$set' => $updateData];
+
+    $result = $db->band->updateOne($filter, $update);
+
+    if ($result->getModifiedCount() > 0) {
+        echo "Band erfolgreich aktualisiert.";
+    } else {
+        echo "Es wurde keine Band aktualisiert.";
+    }
+}
+
 ?>
