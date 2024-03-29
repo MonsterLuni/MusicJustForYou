@@ -149,20 +149,22 @@ function addBand($name, $members): void
     $db->band->insertOne(["name" => $name, "members" => $members]);
 }
 
-function deleteSong($data, $isId = false) {
+/*function deleteSong($data, $isId = false) {
     global $db;
 
     if ($isId) {
         $id = new MongoDB\BSON\ObjectId($data); 
         $db->song->deleteOne(["_id" => $id]);
-        echo "hallo";
+        echo "hallo1";
     } else {
         $db->song->deleteOne(["name" => $data]);
+        var_dump("hallo");
     }
-}
+}*/
 
 function deleteUser($data, $isId = false){
      global $db;
+
 
      if($isId){
          $id = new MongoDB\BSON\ObjectId($data); 
