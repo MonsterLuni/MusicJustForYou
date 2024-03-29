@@ -2,6 +2,26 @@
 require 'vendor/autoload.php'; // include Composer's autoloader
 $client = new MongoDB\Client("mongodb://localhost:27017");
 $db = $client->music;
+# REGISTER / LOGIN ---------------------------
+function registerUser($username,$email,$password)
+{
+    $hash = password_hash($password,PASSWORD_DEFAULT);
+    $db->user->insertOne(["username" => $username,"email" => $email,"password" => $hash]);
+}
+
+if(isset($_POST['type'])){
+    if($_POST['type'] == "Register"){
+        registerUser($_POST['username'],$_POST['email'],$_POST['password']);
+    }elseif ($_POST['type'] == "Login"){
+        if(validateUserInput()){
+            $_SESSION['user'];
+        }
+    }
+    unset($_POST['type']);
+    header("Location: /Account.php");
+    exit();
+}
+
 # SHOW ---------------------------
 function showPlaylist($playlist){
     echo "<div id='playlist'>";
@@ -59,7 +79,7 @@ function showUser($user){
 function getSong($data, $id){
     global $db;
     if($id){
-        return $db->song->findOne(["_id" => $data]);
+        return $db->song->findOne(["_id" => new MongoDB\BSON\ObjectId($data)]);
     }else{
         return $db->song->findOne(["name" => $data]);
     }
@@ -67,7 +87,7 @@ function getSong($data, $id){
 function getUser($data, $id){
     global $db;
     if($id){
-        return $db->user->findOne(["_id" => $data]);
+        return $db->user->findOne(["_id" => new MongoDB\BSON\ObjectId($data)]);
     }
     else{
         return $db->user->findOne(["username" => $data]);
@@ -76,7 +96,7 @@ function getUser($data, $id){
 function getPlaylist($data, $id){
     global $db;
     if($id){
-        return $db->playlist->findOne(["_id" => $data]);
+        return $db->playlist->findOne(["_id" => new MongoDB\BSON\ObjectId($data)]);
     }else{
         return $db->playlist->findOne(["name" => $data]);
     }
@@ -84,7 +104,7 @@ function getPlaylist($data, $id){
 function getBand($data, $id){
     global $db;
     if($id){
-        return $db->band->findOne(["_id" => $data]);
+        return $db->band->findOne(["_id" => new MongoDB\BSON\ObjectId($data)]);
     }else{
         return $db->band->findOne(["name" => $data]);
     }

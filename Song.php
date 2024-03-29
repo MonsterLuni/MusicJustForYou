@@ -12,8 +12,6 @@
 <div id=songDiv>
     <?php
     // Dokumente anzeigen
-    var_dump($_REQUEST['id']);
-    var_dump(getSong($_REQUEST['id'],true));
     showSongMaximum(getSong($_REQUEST['id'],true));
     ?>
 </div>

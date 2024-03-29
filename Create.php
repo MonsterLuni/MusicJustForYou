@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MJFU - Home</title>
+    <title>MJFU - Create</title>
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/nav.css">
     <?php require './Connection.php'; ?>
 </head>
 <?php require 'Header.php'; ?>
 <body id='home'>
-<h1 id='title'>MusicJustForYou</h1>
-<h2 id='secTitle'>Songs</h2>
-<div id=songDiv>
     <?php
     // Dokumente anzeigen
-    foreach($db->song->find() as $song){
-        showSong($song);
+    if(isset($_SESSION['user'])){
+        foreach($db->song->find() as $song){
+            showSong($song);
+        }
+    }
+    else {
+        echo "<h1 id='title'>You have to be logged in to create anything</h1>";
+        echo "<a href='Login.php'>Login</a>";
+        echo "<a href='Account.php'>Register</a>";
     }
     ?>
-</div>
 </body>
 </html>
