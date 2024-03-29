@@ -189,53 +189,6 @@ function addBand($name, $members): void
     $db->band->insertOne(["name" => $name, "members" => (array)$members]);
 }
 
-/*function deleteSong($data, $isId = false) {
-    global $db;
-
-    if ($isId) {
-        $id = new MongoDB\BSON\ObjectId($data); 
-        $db->song->deleteOne(["_id" => $id]);
-        echo "hallo1";
-    } else {
-        $db->song->deleteOne(["name" => $data]);
-        var_dump("hallo");
-    }
-}*/
-
-function deleteUser($data, $isId = false){
-     global $db;
-
-
-     if($isId){
-         $id = new MongoDB\BSON\ObjectId($data); 
-         $db->user->deleteOne(["_id" => $id]);;
-     }
-      else{
-         $db->user->deleteOne(["name" => $data]);
-     }
-}
-
-function deletePlaylist($data, $isId = false){
-     global $db;
-     if($isId){
-         $id = new MongoDB\BSON\ObjectId($data); 
-         $db->playlist->deleteOne(["_id" => $id]);;
-     }
-     else{
-         $db->playlist->deleteOne(["name" => $data]);
-     }
-}
-
-function deleteBand($data, $isId = false){
-     global $db;
-     if($isId){
-         $id = new MongoDB\BSON\ObjectId($data); 
-         $db->band->deleteOne(["_id" => $id]);;
-     }
-     else{
-         $db->band->deleteOne(["name" => $data]);
-     }
- }
 
 function updateSong($id, $updateData) {
     global $db;
