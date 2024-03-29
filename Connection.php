@@ -160,7 +160,7 @@ function addBand($name, $members): void
         $db->song->deleteOne(["name" => $data]);
         var_dump("hallo");
     }
-}*/
+}
 
 function deleteUser($data, $isId = false){
      global $db;
@@ -195,7 +195,7 @@ function deleteBand($data, $isId = false){
      else{
          $db->band->deleteOne(["name" => $data]);
      }
- }
+ }*/
 
 function updateSong($id, $updateData) {
     global $db;
