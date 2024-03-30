@@ -4,6 +4,20 @@ $client = new MongoDB\Client("mongodb://localhost:27017");
 $db = $client->music;
 
 # REGISTER / LOGIN ---------------------------
+function getSongsFromPOST(): array
+{
+    $songs = [];
+    for ($i = 0; $i < sizeof($_POST); $i++){
+        if(isset($_POST['song' . $i]) && $_POST['song' . $i] != ""){
+            $text = $_POST["song" . $i];
+            $song = getSong($text,true)['_id'];
+            if($song != null){
+                $songs[$i] = $song;
+            }
+        }
+    }
+    return $songs;
+}
 if(isset($_POST['type'])){
     session_start();
     if($_POST['type'] == "Register"){
@@ -23,7 +37,7 @@ if(isset($_POST['create'])){
     switch ($_POST['create']){
         case "band":
             $members = [];
-            for ($i = 1; $i < sizeof($_POST); $i++){
+            for ($i = 0; $i < sizeof($_POST); $i++){
                 if(isset($_POST['treeMember' . $i]) && $_POST['treeMember' . $i] != ""){
                     $members[$i] = $_POST['treeMember' . $i];
                 }
@@ -39,18 +53,84 @@ if(isset($_POST['create'])){
             header("Location: /Create.php");
             break;
         case "playlist":
+            $songs = getSongsFromPOST();
+            addPlaylist($_POST['name'],$songs,$_SESSION['user']['_id']);
+            header("Location: /Create.php");
+            break;
+    }
+}
+if(isset($_POST['update'])){
+    session_start();
+    switch ($_POST['update']){
+        case "band":
+            $bandJson = [];
+            $members = [];
+            for ($i = 0; $i < sizeof($_POST); $i++){
+                if(isset($_POST['treeMember' . $i]) && $_POST['treeMember' . $i] != ""){
+                    $members[$i] = $_POST['treeMember' . $i];
+                }
+            }
+            if($_POST['name'] == ""){
+                $bandJson = array("members" => $members);
+            } else if (sizeof($members) < 1){
+                $bandJson = array("name" => $_POST['name']);
+            } else{
+                $bandJson = array("name" => $_POST['name'], "members" => $members);
+            }
+            update($_POST["bandSelect"],$bandJson,$_POST['update']);
+            header("Location: /Update.php");
+            break;
+        case "song":
+            $bandJson = [];
+            if($_POST['name'] != ""){
+                $bandJson = array("name" => $_POST['name']);
+            }
+            if ($_POST['bandw'] != ""){
+                $bandJson = array_merge($bandJson, array("band" => getBand($_POST['bandw'],true)['_id']));
+            }
+            if ($_POST['genre'] != ""){
+                $bandJson = array_merge($bandJson, array("genre" => $_POST['genre']));
+            }
+            if ($_POST['length'] != ""){
+                $bandJson = array_merge($bandJson, array("length" => $_POST['length']));
+            }
+            update($_POST["songSelect"],$bandJson,$_POST['update']);
+            header("Location: /Update.php");
+            break;
+        case "playlist":
+            $bandJson = [];
             $songs = [];
-            for ($i = 1; $i < sizeof($_POST); $i++){
+            for ($i = 0; $i < sizeof($_POST); $i++){
                 if(isset($_POST['song' . $i]) && $_POST['song' . $i] != ""){
                     $text = $_POST["song" . $i];
-                    $song = getSong($text,true)['_id'];
-                    if($song != null){
-                        $songs[$i] = $song;
+                    if($text != null){
+                        $text = getSong($text,true)['_id'];
+                        $songs[$i] = $text;
                     }
                 }
             }
-            addPlaylist($_POST['name'],$songs,$_SESSION['user']['_id']);
-            header("Location: /Create.php");
+            var_dump($_POST['song1']);
+            if($_POST['name'] == ""){
+                $bandJson = array("songs" => $songs);
+            } else if (sizeof($songs) < 1){
+                $bandJson = array("name" => $_POST['name']);
+            } else{
+                $bandJson = array("name" => $_POST['name'], "songs" => $songs);
+            }
+            update($_POST["playlistSelect"],$bandJson,$_POST['update']);
+            header("Location: /Update.php");
+            break;
+        case "user":
+            $bandJson = [];
+            if($_POST['username'] != ""){
+                $bandJson = array("username" => $_POST['username']);
+            }
+            if ($_POST['email'] != ""){
+                $bandJson = array_merge($bandJson, array("email" => $_POST['email']));
+            }
+            update($_SESSION['user']['_id'],$bandJson,$_POST['update']);
+            $_SESSION['user'] = getUser($_SESSION['user']['_id'],true);
+            header("Location: /Update.php");
             break;
     }
 }
@@ -68,8 +148,11 @@ if(isset($_POST['delete'])){
             deletePlaylist($_POST["playlist"], true);
             header("Location: /Delete.php");
             break;
+        case "user":
+            deleteUser($_POST["user_id"], true);
+            header("Location: /Delete.php");
+            break;
     }
-    //deleteUser($_POST["user_id"], true);
 }
 function validateUserInput($username, $password): bool
 {
@@ -247,60 +330,26 @@ function deleteBand($data, $isId = false): void{
 }
 
 # UPDATE ---------------------------
-function updateSong($id, $updateData) {
+function update($id, $updateData, $type): void
+{
     global $db;
 
     $filter = ["_id" => new MongoDB\BSON\ObjectId($id)];
     $update = ['$set' => $updateData];
 
-    $result = $db->song->updateOne($filter, $update);
-
-    if ($result->getModifiedCount() > 0) {
-        echo "Song erfolgreich aktualisiert.";
-    } else {
-        echo "Es wurde kein Song aktualisiert.";
-    }
-}
-function updateUser($id, $updateData) {
-    global $db;
-
-    $filter = ["_id" => new MongoDB\BSON\ObjectId($id)];
-    $update = ['$set' => $updateData];
-
-    $result = $db->user->updateOne($filter, $update);
-
-    if ($result->getModifiedCount() > 0) {
-        echo "User erfolgreich aktualisiert.";
-    } else {
-        echo "Es wurde kein User aktualisiert.";
-    }
-}
-function updatePlaylist($id, $updateData) {
-    global $db;
-
-    $filter = ["_id" => new MongoDB\BSON\ObjectId($id)];
-    $update = ['$set' => $updateData];
-
-    $result = $db->playlist->updateOne($filter, $update);
-
-    if ($result->getModifiedCount() > 0) {
-        echo "Playlist erfolgreich aktualisiert.";
-    } else {
-        echo "Es wurde keine Playlist aktualisiert.";
-    }
-}
-function updateBand($id, $updateData) {
-    global $db;
-
-    $filter = ["_id" => new MongoDB\BSON\ObjectId($id)];
-    $update = ['$set' => $updateData];
-
-    $result = $db->band->updateOne($filter, $update);
-
-    if ($result->getModifiedCount() > 0) {
-        echo "Band erfolgreich aktualisiert.";
-    } else {
-        echo "Es wurde keine Band aktualisiert.";
+    switch ($type){
+        case "band":
+            $db->band->updateOne($filter, $update);
+            break;
+        case "song":
+            $db->song->updateOne($filter, $update);
+            break;
+        case "playlist":
+            $db->playlist->updateOne($filter, $update);
+            break;
+        case "user":
+            $db->user->updateOne($filter, $update);
+            break;
     }
 }
 ?>
