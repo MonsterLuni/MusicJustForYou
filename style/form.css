@@ -6,7 +6,7 @@ form{
     width: 300px;
     background-color: #011e36;
     border-radius: 5px;
-    padding: 5px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
