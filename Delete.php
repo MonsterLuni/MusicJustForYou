@@ -22,7 +22,7 @@
                 <form action="/Connection.php" method="post">
                     <input type="hidden" name="delete" value="song">
                     <input type="hidden" name="song" value="<?php echo $song['_id']; ?>">
-                    <button type="submit">Delete</button>
+                    <button class="delete-button" type="submit">Delete</button>
                 </form>
                 <?php
             }
@@ -38,7 +38,7 @@
                 <form action="/Connection.php" method="post">
                     <input type="hidden" name="delete" value="user">
                     <input type="hidden" name="user" value="<?php echo $user['_id']; ?>">
-                    <button type="submit">Delete</button>
+                    <button class="delete-button" type="submit">Delete</button>
                 </form>
                 <?php
             }
@@ -54,7 +54,7 @@
                 <form action="/Connection.php" method="post">
                     <input type="hidden" name="delete" value="playlist">
                     <input type="hidden" name="playlist" value="<?php echo $playlist['_id']; ?>">
-                    <button type="submit">Delete</button>
+                    <button class="delete-button" type="submit">Delete</button>
                 </form>
                 <?php
             }
@@ -70,7 +70,7 @@
                 <form action="/Connection.php" method="post">
                     <input type="hidden" name="delete" value="band">
                     <input type="hidden" name="band" value="<?php echo $band['_id']; ?>">
-                    <button type="submit">Delete</button>
+                    <button class="delete-button" type="submit">Delete</button>
                 </form>
                 <?php
             }

@@ -1,6 +1,7 @@
 *{
     margin: 0;
     padding: 0;
+    color: white; !important
 }
 body {
     background-color: #01080e;
@@ -86,4 +87,24 @@ body {
 }
 ::-webkit-scrollbar {
     display: none;
+}
+
+.delete-button {
+    background-color: #FF4136; /* Rotes Löschen */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Abstand nach oben */
+}
+
+    .delete-button:hover {
+        background-color: #D63031; /* Dunkleres Rot bei Hover */
+    }
+
+.delete-button-container {
+    display: flex;
+    justify-content: center;
 }
