@@ -13,7 +13,7 @@
         <h1 id='title'>MusicJustForYou</h1>
 
         <h2 id='secTitle'>Songs</h2>
-        <div id="songDiv">
+        <div id="songDiv2">
             <?php
             foreach($db->song->find() as $song){
                 showSongMinimal($song);
