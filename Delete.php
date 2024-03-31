@@ -35,11 +35,13 @@
             foreach($db->user->find() as $user){
                 showUser($user);
                 ?>
-                <form action="/Connection.php" method="post">
-                    <input type="hidden" name="delete" value="user">
-                    <input type="hidden" name="user" value="<?php echo $user['_id']; ?>">
-                    <button class="delete-button" type="submit">Delete</button>
-                </form>
+                
+                    <form action="/Connection.php" method="post">
+                        <input type="hidden" name="delete" value="user">
+                        <input type="hidden" name="user" value="<?php echo $user['_id']; ?>">
+                        <button class="delete-button" type="submit">Delete</button>
+                    </form>
+                
                 <?php
             }
             ?>
