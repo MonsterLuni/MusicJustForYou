@@ -42,19 +42,19 @@ if(isset($_POST['create'])){
                     $members[$i] = $_POST['treeMember' . $i];
                 }
             }
-            addBand($_POST['name'],$members);
+            addBand($_POST['name'],$members,$_POST['otherName'],$_POST['otherValue']);
             header("Location: /Create.php");
             break;
         case "song":
             $band_id = getband($_POST['bandw'],true)['_id'];
             if($band_id != null){
-                addSong($_POST['name'],$band_id,$_POST['genre'],$_POST['length'],$_SESSION['user']['_id']);
+                addSong($_POST['name'],$band_id,$_POST['genre'],$_POST['length'],$_SESSION['user']['_id'],$_POST['otherName'],$_POST['otherValue']);
             }
             header("Location: /Create.php");
             break;
         case "playlist":
             $songs = getSongsFromPOST();
-            addPlaylist($_POST['name'],$songs,$_SESSION['user']['_id']);
+            addPlaylist($_POST['name'],$songs,$_SESSION['user']['_id'],$_POST['otherName'],$_POST['otherValue']);
             header("Location: /Create.php");
             break;
     }
@@ -267,10 +267,16 @@ function getBand($data, $id): object|array|null
 }
 
 # POST ---------------------------
-function addSong($name,$band,$genre,$length,$user): void
+function addSong($name,$band,$genre,$length,$user, $otherName, $otherValue): void
 {
     global $db;
-    $db->song->insertOne(["name" => $name, "band" => $band, "genre" => $genre, "length" => $length, "user" => $user]);
+    if($otherName == ""){
+        $db->song->insertOne(["name" => $name, "band" => $band, "genre" => $genre, "length" => $length, "user" => $user]);
+    }
+    else{
+        $db->song->insertOne(["name" => $name, "band" => $band, "genre" => $genre, "length" => $length, "user" => $user, $otherName => $otherValue]);
+    }
+
 }
 function addUser($name, $email, $password): void
 {
@@ -278,15 +284,26 @@ function addUser($name, $email, $password): void
     $hash = password_hash($password,PASSWORD_DEFAULT);
     $db->user->insertOne(["username" => $name, "email" => $email, "password" => $hash]);
 }
-function addPlaylist($name,$songs,$user): void
+function addPlaylist($name,$songs,$user, $otherName, $otherValue): void
 {
     global $db;
-    $db->playlist->insertOne(["name" => $name, "songs" => $songs, "user" => $user]);
+    var_dump($otherName);
+    if($otherName == ""){
+        $db->playlist->insertOne(["name" => $name, "songs" => $songs, "user" => $user]);
+    }
+    else{
+        $db->playlist->insertOne(["name" => $name, "songs" => $songs, "user" => $user, $otherName => $otherValue]);
+    }
 }
-function addBand($name, $members): void
+function addBand($name, $members, $otherName, $otherValue): void
 {
     global $db;
-    $db->band->insertOne(["name" => $name, "members" => (array)$members]);
+    if($otherName == ""){
+        $db->band->insertOne(["name" => $name, "members" => (array)$members]);
+    }
+    else{
+        $db->band->insertOne(["name" => $name, "members" => (array)$members, $otherName => $otherValue]);
+    }
 }
 
 # DELETE ---------------------------

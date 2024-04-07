@@ -10,7 +10,24 @@
     <?php require 'Header.php'; ?>
 
     <body id='home'>
-        <h1 id='title'>MusicJustForYou</h1>
+
+    <?php session_start(); if(isset($_SESSION['user'])){ ?>
+
+        <h2 id='secTitle'>Playlists</h2>
+        <div id="playlistDiv">
+            <?php
+            foreach($db->playlist->find() as $playlist){
+                showPlaylist($playlist);
+                ?>
+                <form action="/Connection.php" method="post">
+                    <input type="hidden" name="delete" value="playlist">
+                    <input type="hidden" name="playlist" value="<?php echo $playlist['_id']; ?>">
+                    <button class="delete-button" type="submit">Delete</button>
+                </form>
+                <?php
+            }
+            ?>
+        </div>
 
         <h2 id='secTitle'>Songs</h2>
         <div id="songDiv2">
@@ -29,39 +46,7 @@
             ?>
         </div>
 
-        <h2 id='secTitle'>Users</h2>
-        <div id="userDiv">
-            <?php
-            foreach($db->user->find() as $user){
-                showUser($user);
-                ?>
-                
-                    <form action="/Connection.php" method="post">
-                        <input type="hidden" name="delete" value="user">
-                        <input type="hidden" name="user" value="<?php echo $user['_id']; ?>">
-                        <button class="delete-button" type="submit">Delete</button>
-                    </form>
-                
-                <?php
-            }
-            ?>
-        </div>
 
-        <h2 id='secTitle'>Playlists</h2>
-        <div id="playlistDiv">
-            <?php
-            foreach($db->playlist->find() as $playlist){
-                showPlaylist($playlist);
-                ?>
-                <form action="/Connection.php" method="post">
-                    <input type="hidden" name="delete" value="playlist">
-                    <input type="hidden" name="playlist" value="<?php echo $playlist['_id']; ?>">
-                    <button class="delete-button" type="submit">Delete</button>
-                </form>
-                <?php
-            }
-            ?>
-        </div>
 
         <h2 id='secTitle'>Bands</h2>
         <div id="bandDiv">
@@ -78,5 +63,30 @@
             }
             ?>
         </div>
+
+        <h2 id='secTitle'>Users</h2>
+        <div id="userDiv">
+            <?php
+            foreach($db->user->find() as $user){
+                showUser($user);
+                ?>
+
+                <form action="/Connection.php" method="post">
+                    <input type="hidden" name="delete" value="user">
+                    <input type="hidden" name="user" value="<?php echo $user['_id']; ?>">
+                    <button class="delete-button" type="submit">Delete</button>
+                </form>
+
+                <?php
+            }
+            ?>
+        </div>
+    <?php
+    }
+    else {
+    echo "<h1 id='title'>You have to be logged in to create anything</h1>";
+    echo "<a href='Login.php'>Login</a>";
+    echo "<a href='Account.php'>Register</a>";
+    }?>
     </body>
 </html>

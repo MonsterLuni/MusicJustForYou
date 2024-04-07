@@ -19,6 +19,10 @@
             <input hidden="hidden" value="playlist" name="create">
             <label for="name">Name</label>
             <input type="text" name="name" placeholder="Die Beste Playlist" required>
+            <label for="otherName">Other Attribute (Name)</label>
+            <input type="text" name="otherName" placeholder="-">
+            <label for="otherValue">Other Attribute (Value)</label>
+            <input type="text" name="otherValue" placeholder="-">
             <label>Songs</label>
             <div id="hereSong">
 
@@ -36,6 +40,10 @@
             <input type="text" name="genre" placeholder="Pop" required>
             <label for="length">Length</label>
             <input type="text" name="length" placeholder="376" required>
+            <label for="otherName">Other Attribute (Name)</label>
+            <input type="text" name="otherName" placeholder="-">
+            <label for="otherValue">Other Attribute (Value)</label>
+            <input type="text" name="otherValue" placeholder="-">
             <label>Band</label>
             <div id="hereSongInput">
 
@@ -49,6 +57,10 @@
             <input hidden="hidden" value="band" name="create">
             <label for="name">Name</label>
             <input type="text" name="name" placeholder="The Wild Band" required>
+            <label for="otherName">Other Attribute (Name)</label>
+            <input type="text" name="otherName" placeholder="-">
+            <label for="otherValue">Other Attribute (Value)</label>
+            <input type="text" name="otherValue" placeholder="-">
             <label>Members</label>
             <div id="hereBand">
 
